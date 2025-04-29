@@ -1,4 +1,5 @@
 import json
+from display import displayPlots
 
 def loadThetas(path="params.json"):
     try:
@@ -14,7 +15,7 @@ def loadThetas(path="params.json"):
 def getUserMilage():
     while True:
         try:
-            userMilage = float(input("Enter car milage: "))
+            userMilage = int(input("Enter car milage: "))
             if userMilage < 0:
                 print("Error: Mileage cannot be negative !!!")
                 continue
@@ -23,19 +24,17 @@ def getUserMilage():
         return userMilage
 
 def predict():
-    theta0 = 0
-    theta1 = 0
     try:
+        theta0 = 0
+        theta1 = 0
         theta0, theta1 = loadThetas()
         if theta0 == 0 and theta1 == 0:
             raise ValueError("Error: Model is not trained yet. Please run train.py first!")
         userMilage = getUserMilage()
-        predicted_price = theta1 + theta0 * userMilage
-    except:
-        return
-
-    else:
+        predicted_price = theta0 + theta1 * userMilage
         print(f"The predicted price for a car with milage {userMilage} is {predicted_price:.2f}")
+    except:
+        print("Error !")
 
 def main():
     predict()

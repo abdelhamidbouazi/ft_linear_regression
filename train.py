@@ -1,4 +1,5 @@
 import sys
+import json
 from checkPathFormat import checkPathNdFormat
 from load_csv import load
 
@@ -29,11 +30,7 @@ def train(path: str):
         mileages = data["km"].to_list()
         prices = data["price"].to_list()
         m = len(mileages)
-
         mean_mileage, std_deviation, km_norm = normlizer(mileages, m)
-
-
-
         for i in range(epochs):
             estimatePrice = [theta0 + theta1 * km for km in km_norm]
             # print(estimatePrice)
@@ -44,17 +41,16 @@ def train(path: str):
 
         real_theta0 = theta0 - (theta1 * mean_mileage) / std_deviation
         real_theta1 = theta1 / std_deviation
-        kmEs = 22899
-        esPrice = real_theta0 + real_theta1 * kmEs
-        print(f"prince is -> {esPrice}")
+        result = json.dumps({"theta0": real_theta0, "theta1": real_theta1}, indent=4)
 
+        with open("params.json", "w") as of:
+            of.write(result)
 
-    except (AssertionError, FileNotFoundError, StopIteration, KeyError) as e:
+    except (AssertionError, FileNotFoundError, StopIteration, KeyError, TypeError) as e:
         print(f"Error during operations : {e}")
 
 def main():
     if len(sys.argv) == 2:
-        print(sys.argv[1])
         train(sys.argv[1])
     else:
         print("Please respect arguments")

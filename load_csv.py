@@ -11,7 +11,7 @@ def load(path: str) -> DataFrame:
     """
     try:
         df = pd.read_csv(path)
-        print(f"Loading dataset of dimensions {df}")
+        # print(f"Loading dataset of dimensions {df}")
         return df
     except (FileNotFoundError, pd.errors.EmptyDataError,
             pd.errors.ParserError, KeyError) as e:
