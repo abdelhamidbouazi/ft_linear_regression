@@ -22,7 +22,6 @@ def train(path: str):
     theta0 = 0
     theta1 = 0
 
-    # 1) compute mean and standard deviation
 
     try:
         checkPathNdFormat(path)

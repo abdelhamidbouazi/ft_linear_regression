@@ -9,6 +9,16 @@ import json
 
 # to run display plots you have to train the modal first, run train.
 
+
+def meanAbsolutePercentageError(prices_real, prices_pred):
+    n = len(prices_real)
+    errors = [ abs((pr_real - pr_pred)/pr_real) * 100  for pr_real, pr_pred in zip(prices_real, prices_pred) if pr_real != 0]
+    mape = sum(errors) / n
+    print(f"Accuracy: {100 - mape:.2f}%")
+    return mape
+
+
+
 def loadThetas(path="params.json"):
     try:
         with open(path, "r") as f:
@@ -30,6 +40,8 @@ def displayPlots(dataPath):
         xpoints = np.array(mileages)
         ypoints = np.array(prices)
         theta0, theta1 = loadThetas()
+        y_pred = [theta0 + theta1 * mi for mi in mileages]
+        meanAbsolutePercentageError(prices, y_pred)
         if theta0 == 0 and theta1 == 0:
             raise ValueError("Error: Model is not trained yet. Please run train.py first!")
         values = [0, 50000, 10000, 150000, 200000, 250000]
@@ -41,19 +53,17 @@ def displayPlots(dataPath):
         ax.legend()
         ax.set_xlabel('price')
         ax.set_ylabel('mileage')
-        ax.title('Cars prices prediction')
-        # ax.
-        # plt.show()
+        ax.set_title('Cars prices prediction')
+        plt.show()
     except Exception as e:
         print ("Error plotting data! ", e)
 
 
 
 def main():
-    if len(sys.argv) == 2:
-        displayPlots(sys.argv[1])
+    # if len(sys.argv) == 2:
+    #     displayPlots(sys.argv[1])
     displayPlots("data.csv")
-    
     # else:
     #     print("Please respect arguments")
     #     return
